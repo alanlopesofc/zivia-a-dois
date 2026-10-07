@@ -13,6 +13,7 @@
 <style>
 /* Tokens do Design System ZIVIA v1.0 (uploads/zivia_design_system.html + styles/tokens.css) */
 :root {
+  --secao: clamp(96px, 12vh, 128px);   /* padding vertical de seção (DS 6-8rem) */
   --z-dark: #262526;       /* Escuro Profundo: base, 50% */
   --z-dark2: #1a1919;
   --z-dark3: #0f0f0f;
@@ -50,7 +51,7 @@ a { color: inherit; }
 /* Tipografia: serifa sempre em 400, nunca negrito */
 .serif { font-family: var(--z-serif); font-weight: 400; }
 h1, h2, h3 { font-family: var(--z-serif); font-weight: 400; }
-h1 { font-size: clamp(44px, 6vw, 88px); line-height: 1.08; }
+h1 { font-size: clamp(44px, 5.2vw, 78px); line-height: 1.1; }
 h2 { font-size: clamp(36px, 4.4vw, 64px); line-height: 1.15; }
 h3 { font-size: clamp(26px, 2.4vw, 32px); line-height: 1.25; }
 h1 em, h2 em { font-style: italic; color: var(--z-gold-light); }
@@ -117,7 +118,7 @@ p { max-width: 36em; }
 .capitulo {
   position: absolute; left: var(--gutter); top: 0; bottom: 0; z-index: 2;
   display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-  width: min(720px, 52vw); opacity: 0;
+  width: min(780px, 56vw); opacity: 0;
 }
 .capitulo.c1 { opacity: 1; }
 .capitulo .lede { color: var(--texto-escuro); margin-top: 1.6rem; max-width: 26em; }
@@ -136,7 +137,7 @@ p { max-width: 36em; }
 .miolo { max-width: var(--container); margin: 0 auto; }
 
 /* 2. Espelho */
-.espelho { padding: clamp(96px, 14vh, 128px) var(--gutter); }
+.espelho { padding: var(--secao) var(--gutter); }
 .espelho h2 { max-width: 13em; }
 .cenas { list-style: none; padding: 0; margin-top: clamp(48px, 7vh, 80px); }
 .cenas li {
@@ -153,7 +154,7 @@ p { max-width: 36em; }
 .citacao p + p { margin-top: .8rem; }
 
 /* 3. O que é */
-.revelacao { padding: 0 var(--gutter) clamp(96px, 14vh, 128px); }
+.revelacao { padding: 0 var(--gutter) var(--secao); }
 .revelacao .miolo { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: end; }
 .revelacao .nao { list-style: none; padding: 0; display: grid; gap: 4px; margin-bottom: 1.6rem; }
 .revelacao .nao li { font: 400 clamp(24px, 2.4vw, 32px)/1.25 var(--z-serif); color: rgba(38,37,38,.42); text-decoration: line-through; text-decoration-thickness: 1px; }
@@ -176,10 +177,11 @@ p { max-width: 36em; }
 .ritual .passos { position: absolute; inset: 0; z-index: 2; display: grid; align-items: center; padding: 0 var(--gutter); }
 .ritual .passo { grid-area: 1 / 1; max-width: min(600px, 44vw); opacity: 0; }
 .ritual .passo p { color: var(--texto-escuro); margin-top: 1.2rem; }
+.passo-n { display: block; margin-bottom: .6rem; font: italic 400 clamp(20px, 1.6vw, 24px)/1.2 var(--z-serif); color: var(--z-gold-light); }
 
 /* 5. As dez cartas */
 .cartas { background: var(--z-dark); overflow: hidden; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
-.cartas .intro { padding: 96px var(--gutter) 40px; display: grid; }
+.cartas .intro { padding: var(--secao) var(--gutter) 2.5rem; display: grid; }
 .cartas .intro p { color: var(--texto-escuro); margin-top: 1rem; }
 .trilho { display: flex; gap: clamp(16px, 2vw, 24px); padding: 0 var(--gutter) 64px; width: max-content; }
 .carta {
@@ -196,17 +198,18 @@ p { max-width: 36em; }
 .carta.fim { border-color: var(--z-gold); }
 
 /* 6. Para quem é */
-.para { padding: clamp(96px, 14vh, 128px) var(--gutter); }
+.para { padding: var(--secao) var(--gutter); }
 .para .miolo { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 96px); }
 .para .cabeca { grid-column: 1 / -1; }
 .para h2 { max-width: 15em; }
 .para h3 { margin-bottom: 1.2rem; }
 .para ul { list-style: none; padding: 0; display: grid; }
-.para li { padding: .9rem 0 .9rem 2rem; border-top: 1px solid var(--linha-clara); color: var(--texto-claro); position: relative; }
+.para { background: var(--z-dark2); }
+.para li { padding: .9rem 0 .9rem 2rem; border-top: 1px solid var(--linha-escura); color: var(--texto-escuro); position: relative; }
 .para li::before { content: ""; position: absolute; left: 0; top: 1.75rem; width: 1rem; height: 1px; background: var(--z-gold); }
 
 /* 7. Levar para casa: card de oferta do DS */
-.casa { position: relative; padding: clamp(96px, 14vh, 128px) var(--gutter); background: radial-gradient(ellipse at 28% 50%, rgba(191,146,63,.14) 0%, transparent 55%), var(--z-dark); }
+.casa { position: relative; padding: var(--secao) var(--gutter); background: radial-gradient(ellipse at 28% 50%, rgba(191,146,63,.14) 0%, transparent 55%), var(--z-dark); }
 .casa .miolo { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(32px, 5vw, 80px); }
 .casa .foto img { width: 100%; border-radius: 12px; }
 .casa h2 { margin-bottom: 1.2rem; }
@@ -219,13 +222,15 @@ p { max-width: 36em; }
 .garantias { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 1.4rem; font: 400 .72rem/1.6 var(--z-sans); letter-spacing: .08em; color: rgba(255,255,255,.6); }
 
 /* 8. Perguntas (FAQ do DS) */
-.perguntas { padding: clamp(96px, 14vh, 128px) var(--gutter); }
+.perguntas { padding: var(--secao) var(--gutter); }
 .perguntas .miolo { display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 6vw, 96px); }
-details { border-top: 1px solid var(--linha-clara); }
-details:last-child { border-bottom: 1px solid var(--linha-clara); }
+.perguntas { background: var(--z-dark2); }
+.perguntas details p { color: var(--texto-escuro); }
+details { border-top: 1px solid var(--linha-escura); }
+details:last-child { border-bottom: 1px solid var(--linha-escura); }
 summary {
   list-style: none; cursor: pointer; padding: 1.4rem 3rem 1.4rem 0; position: relative;
-  font: 400 clamp(22px, 2vw, 27px)/1.3 var(--z-serif); color: var(--z-dark);
+  font: 400 clamp(22px, 2vw, 27px)/1.3 var(--z-serif); color: var(--z-light);
 }
 summary::-webkit-details-marker { display: none; }
 summary::after {
@@ -237,7 +242,7 @@ details[open] summary::after { transform: translateY(-30%) rotate(-135deg); }
 details p { padding: 0 0 1.6rem; }
 
 /* 9. Feel again */
-.final { min-height: 100vh; display: grid; place-items: center; text-align: center; padding: 120px var(--gutter); position: relative; overflow: hidden; background: var(--z-dark3); }
+.final { min-height: 100svh; display: grid; place-items: center; text-align: center; padding: 120px var(--gutter); position: relative; overflow: hidden; background: var(--z-dark3); }
 .final video, .final .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.45); }
 video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }
 video::-webkit-media-controls { display: none !important; }
@@ -248,6 +253,7 @@ video::-webkit-media-controls { display: none !important; }
 footer { padding: 2rem var(--gutter); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font: 400 .66rem/1.6 var(--z-sans); letter-spacing: .1em; color: rgba(255,255,255,.5); background: var(--z-dark3); border-top: 1px solid var(--linha-escura); }
 
 @media (max-width: 860px) {
+  :root { --secao: 72px; }
   /* Celular: nada abaixo de 12px, corpo em 400 para ler em tela pequena */
   body { font-size: 17px; font-weight: 400; }
   h1 { font-size: clamp(36px, 9.6vw, 46px); }
@@ -343,11 +349,12 @@ html.travado, html.travado body { overflow: hidden; }
 .espelho.escuro .citacao .serif { color: var(--z-gold-light); }
 .espelho.escuro .citacao p { color: var(--texto-escuro); }
 .amanhecer { height: clamp(72px, 12vh, 140px); background: linear-gradient(var(--z-dark2), var(--z-muted)); }
+.anoitecer { height: clamp(72px, 12vh, 140px); background: linear-gradient(var(--z-muted), var(--z-dark3)); }
 .espelho.escuro { padding-bottom: clamp(56px, 9vh, 96px); }
-@media (max-width: 860px) { .amanhecer { height: 48px; } .revelacao { padding-top: 8px; } }
+@media (max-width: 860px) { .amanhecer, .anoitecer { height: 48px; } .revelacao { padding-top: 8px; } }
 
 /* Títulos revelados palavra a palavra */
-.revela .p { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; margin-bottom: -.08em; }
+.revela .p { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 .04em .18em; margin: 0 -.04em -.18em; }
 .revela .p > span { display: inline-block; }
 
 /* Carta em foco no trilho */
@@ -407,7 +414,6 @@ html.travado, html.travado body { overflow: hidden; }
       <div class="capitulo c3" aria-hidden="true">
         <h2>Você não abre uma caixa. <em>Você desbloqueia um momento.</em></h2>
       </div>
-      <span class="rolar" aria-hidden="true">Role para abrir</span>
       <div class="iris"></div>
       <div class="sussurro"><p>Agora vocês estão dentro.<span>Respire. O resto do mundo pode esperar.</span></p></div>
     </div>
@@ -416,7 +422,6 @@ html.travado, html.travado body { overflow: hidden; }
   <!-- 2. Espelho: o automático, sem acusar o casal -->
   <section class="espelho escuro" id="dentro" aria-labelledby="espelho-t">
    <div class="miolo">
-    <span class="zlabel">O automático</span>
     <h2 id="espelho-t">Vocês se reconhecem em alguma dessas cenas?</h2>
     <ul class="cenas">
       <li>O jantar com o celular ao lado do prato.</li>
@@ -437,7 +442,6 @@ html.travado, html.travado body { overflow: hidden; }
   <section class="claro revelacao" aria-labelledby="rev-t">
    <div class="miolo">
     <div>
-      <span class="zlabel">O produto</span>
       <ul class="nao" aria-label="O que a ZÍVIA não é">
         <li>Não é terapia.</li>
         <li>Não é conversa forçada.</li>
@@ -457,6 +461,8 @@ html.travado, html.travado body { overflow: hidden; }
    </div>
   </section>
 
+  <div class="anoitecer" aria-hidden="true"></div>
+
   <!-- 4. Ritual em fragmentos. Vídeo do Higgsfield entra em ritual.mp4 -->
   <section class="ritual" aria-labelledby="ritual-t">
     <div class="quadro">
@@ -464,17 +470,17 @@ html.travado, html.travado body { overflow: hidden; }
       <div class="passos">
         <h2 id="ritual-t" class="sr-only" style="position:absolute;left:-9999px">Como o ritual acontece</h2>
         <div class="passo">
-          <span class="zlabel">Primeiro</span>
+          <span class="passo-n">Primeiro</span>
           <h2>Abrir o ritual.</h2>
           <p>Luz baixa, celular longe. Vocês escolhem a noite e abrem o envelope juntos.</p>
         </div>
         <div class="passo">
-          <span class="zlabel">Depois</span>
+          <span class="passo-n">Depois</span>
           <h2>Atravessar a experiência.</h2>
           <p>Cada carta conduz o encontro do começo ao fim. Ninguém precisa improvisar.</p>
         </div>
         <div class="passo">
-          <span class="zlabel">No fim</span>
+          <span class="passo-n">No fim</span>
           <h2>Sair com algo diferente <em>entre vocês.</em></h2>
           <p>Uma frase que faltava. Um olhar que voltou. A sensação de que vocês ainda se escolhem.</p>
         </div>
@@ -504,10 +510,9 @@ html.travado, html.travado body { overflow: hidden; }
   </section>
 
   <!-- 6. Para quem é, para quem não é -->
-  <section class="claro para" aria-labelledby="para-t">
+  <section class="para" aria-labelledby="para-t">
    <div class="miolo">
     <div class="cabeca">
-      <span class="zlabel">Para quem</span>
       <h2 id="para-t">Não é coisa de casal em crise. É coisa de casal que não aceita <em>o modo manutenção.</em></h2>
     </div>
     <div>
@@ -537,7 +542,6 @@ html.travado, html.travado body { overflow: hidden; }
       <img src="assets/caixa-entreaberta.jpg" alt="Caixa ZIVIA A Dois preta fosca com o logo dourado, a tampa entreaberta e a luz âmbar saindo de dentro" loading="lazy">
     </div>
     <div>
-      <span class="zlabel">Levar para casa</span>
       <h2 id="levar-t">Mais íntimo que um hotel. <em>Mais intenso que um buquê.</em></h2>
       <p class="lede">ZÍVIA A Dois chega pronta: dez cartas, os materiais de cada encontro e as instruções. Parece que levou semanas para planejar.</p>
       <div class="oferta">
@@ -556,10 +560,9 @@ html.travado, html.travado body { overflow: hidden; }
   </section>
 
   <!-- 8. Perguntas: as objeções reais do casal -->
-  <section class="claro perguntas" aria-labelledby="faq-t">
+  <section class="perguntas" aria-labelledby="faq-t">
    <div class="miolo">
     <div>
-      <span class="zlabel">Perguntas</span>
       <h2 id="faq-t">O que casais perguntam <em>antes de abrir.</em></h2>
     </div>
     <div>
@@ -600,7 +603,7 @@ const Y = v => reduce ? 0 : v;
 
 // Topo ganha fundo depois da primeira dobra.
 const topo = document.querySelector('.topo');
-addEventListener('scroll', () => topo.classList.toggle('scrolled', scrollY > innerHeight * .5), { passive: true });
+ScrollTrigger.create({ start: () => innerHeight * .5, end: 'max', toggleClass: { targets: topo, className: 'scrolled' } });
 
 // Hero: a caixa real (vídeos do space Magnific) abrindo quadro a quadro com o scroll.
 const limiar = document.getElementById('limiar');
@@ -698,7 +701,6 @@ function quebrar(el) {
     },
   });
   tl.to('.c1', { opacity: 0, y: Y(-40), duration: .14 }, .06)
-    .to('.rolar', { opacity: 0, duration: .06 }, .06)
     .fromTo('.c2', { opacity: 0, y: Y(40) }, { opacity: 1, y: 0, duration: .1 }, .22)
     .to('.c2', { opacity: 0, y: Y(-40), duration: .1 }, .44)
     .fromTo('.c3', { opacity: 0, y: Y(40) }, { opacity: 1, y: 0, duration: .1 }, .58)
