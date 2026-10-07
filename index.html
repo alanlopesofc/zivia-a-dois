@@ -669,14 +669,28 @@ function abrirLimiar(destino) {
 
 // Vídeos: o iPhone (principalmente em Modo de Pouca Energia) bloqueia autoplay.
 // Liberamos no primeiro toque (o próprio "Entrar") e tocamos só quando o vídeo aparece na tela.
+// Plano B do Modo de Pouca Energia: o iPhone recusa o <video> mesmo depois do toque, mas o motor do Safari
+// (também usado pelo Chrome do iPhone) anima MP4 dentro de <img>, sem botão de play.
+// Se o play for recusado, o vídeo vira essa imagem, com a mesma classe; se não carregar, fica o poster.
 const videos = [...document.querySelectorAll('video')];
-const liberar = () => videos.forEach(v => { v.muted = true; const t = v.play(); t?.then(() => { if (!v.dataset.visivel) v.pause(); }).catch(() => {}); });
+const comoImagem = v => {
+  if (v.dataset.trocado) return;
+  v.dataset.trocado = '1';
+  const img = new Image();
+  img.className = v.className;
+  img.alt = ''; img.setAttribute('aria-hidden', 'true');
+  img.onload = () => { io.unobserve(v); v.replaceWith(img); };
+  img.src = v.currentSrc || v.src;
+};
+const recusado = v => e => { if (e && e.name === 'NotAllowedError') comoImagem(v); };
+const liberar = () => videos.forEach(v => { v.muted = true; const t = v.play(); t?.then(() => { if (!v.dataset.visivel) v.pause(); }).catch(recusado(v)); });
 ['touchend', 'click', 'keydown'].forEach(ev => addEventListener(ev, liberar, { once: true, passive: true }));
 const io = new IntersectionObserver(es => es.forEach(e => {
   const v = e.target;
-  if (e.isIntersecting) { v.dataset.visivel = '1'; v.muted = true; v.play().catch(() => {}); }
+  if (e.isIntersecting) { v.dataset.visivel = '1'; v.muted = true; v.play().catch(recusado(v)); }
   else { delete v.dataset.visivel; v.pause(); }
 }), { threshold: .15 });
+if (/[?&]semvideo/.test(location.search)) { const trocar = () => videos.forEach(comoImagem); document.readyState === 'complete' ? trocar() : addEventListener('load', trocar); }
 videos.forEach(v => io.observe(v));
 
 // Luz de vela: acompanha o cursor nas partes escuras da página.
