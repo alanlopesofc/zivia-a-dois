@@ -56,9 +56,10 @@ export function mountSequence(canvas, { desk, mob, frames, onLoad }) {
     let s, x, y;
     if (dir === mob) {
       // Celular: quadro quadrado ocupando a largura, na parte de cima (texto fica embaixo).
-      s = W / im.width;
-      x = 0;
-      y = H * .04 + 0 * s;
+      // Celular: quadro quadrado no alto, um pouco menor, para o título caber embaixo.
+      s = (W * .86) / im.width;
+      x = (W - im.width * s) / 2;
+      y = H * .07;
     } else {
       // Desktop: cobre a tela, com a caixa deslocada à direita para os textos ficarem livres à esquerda.
       s = Math.max(W / im.width, H / im.height);
