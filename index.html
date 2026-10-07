@@ -6,6 +6,12 @@
 <meta name="robots" content="noindex">
 <title>ZÍVIA A Dois</title>
 <meta name="description" content="Dez experiências guiadas para casais saírem do automático, em casa, numa noite só de vocês. ZIVIA — Feel Again.">
+<script>
+  // A página sempre abre no topo: sem restaurar a rolagem anterior e sem pular para âncora antiga.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  window.scrollTo(0, 0);
+</script>
 <link rel="preload" as="image" href="assets/seq/d/001.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -121,6 +127,7 @@ p { max-width: 36em; }
   width: min(780px, 56vw); opacity: 0;
 }
 .capitulo.c1 { opacity: 1; }
+.capitulo.c2, .capitulo.c3 { pointer-events: none; }   /* invisíveis não podem bloquear o toque no botão do hero */
 .capitulo .lede { color: var(--texto-escuro); margin-top: 1.6rem; max-width: 26em; }
 .capitulo .acoes { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: center; margin-top: 2.4rem; }
 .capitulo.c2, .capitulo.c3 { width: min(600px, 44vw); justify-content: flex-end; padding-bottom: 14vh; }
@@ -599,10 +606,22 @@ html.travado, html.travado body { overflow: hidden; }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script type="module">
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.clearScrollMemory('manual');
 // Com "Reduzir movimento" ligado (comum no iPhone) a página entra em modo calmo:
 // a caixa continua abrindo com o scroll e os textos trocam só por opacidade, sem deslocamentos.
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const Y = v => reduce ? 0 : v;
+
+// Links internos rolam até a seção sem gravar #âncora no endereço.
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  const alvo = a.getAttribute('href') === '#topo' ? document.body : document.querySelector(a.getAttribute('href'));
+  if (!alvo) return;
+  e.preventDefault();
+  alvo.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+});
+addEventListener('pageshow', e => { if (e.persisted) scrollTo(0, 0); });
 
 // Topo ganha fundo depois da primeira dobra.
 const topo = document.querySelector('.topo');
@@ -639,9 +658,7 @@ function abrirLimiar(destino) {
     .fromTo('#caixa', { scale: 1.14 }, { scale: 1, duration: 2.4, ease: 'power2.out' }, '<')
     .from('.c1 > *', { opacity: 0, y: 24, duration: 1, stagger: .12, ease: 'power2.out' }, '-=1.3');
 }
-if (location.hash) {
-  limiar.remove();
-} else {
+{
   document.documentElement.classList.add('travado');
   scrollTo(0, 0);
   setTimeout(() => limiar.classList.add('pronto'), 6000);   // não prende ninguém numa conexão lenta
