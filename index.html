@@ -179,22 +179,28 @@ p { max-width: 36em; }
 .ritual .passo p { color: var(--texto-escuro); margin-top: 1.2rem; }
 .passo-n { display: block; margin-bottom: .6rem; font: italic 400 clamp(20px, 1.6vw, 24px)/1.2 var(--z-serif); color: var(--z-gold-light); }
 
-/* 5. As dez cartas */
-.cartas { background: var(--z-dark); overflow: hidden; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
-.cartas .intro { padding: var(--secao) var(--gutter) 2.5rem; display: grid; }
-.cartas .intro p { color: var(--texto-escuro); margin-top: 1rem; }
-.trilho { display: flex; gap: clamp(16px, 2vw, 24px); padding: 0 var(--gutter) 64px; width: max-content; }
+/* 5. As dez cartas: pilha. Cada carta para no alto e a próxima a cobre. */
+.cartas { background: var(--z-dark); padding: var(--secao) var(--gutter); }
+.cartas .miolo { display: grid; grid-template-columns: 1fr minmax(0, 540px); gap: clamp(40px, 7vw, 120px); align-items: start; }
+.cartas .intro { position: sticky; top: 30vh; }
+.cartas .intro p { color: var(--texto-escuro); margin-top: 1rem; max-width: 26em; }
+.pilha { display: grid; }
 .carta {
-  position: relative; width: clamp(240px, 20vw, 290px); height: min(56vh, 440px);
-  background: linear-gradient(165deg, var(--z-dark2), var(--z-dark3) 75%);
-  border: 1px solid rgba(191,146,63,.18); border-radius: 12px;
-  padding: 28px 26px; display: flex; flex-direction: column;
-  box-shadow: 0 25px 60px rgba(0,0,0,.3);
+  --sombra: 0;
+  position: sticky; top: calc(14vh + var(--i) * 14px);
+  height: min(60vh, 500px); margin-bottom: 38vh;
+  background: linear-gradient(165deg, #2a2829 0%, var(--z-dark2) 45%, var(--z-dark3) 100%);
+  border: 1px solid rgba(191,146,63,.22); border-radius: 12px;
+  padding: clamp(28px, 3vw, 40px); display: flex; flex-direction: column;
+  box-shadow: 0 -18px 50px rgba(0,0,0,.35);
+  transform-origin: 50% 0;
 }
-.carta .simbolo { width: 92px; height: 15px; background: url(assets/logo-zivia-crop.png) top center / 100% auto no-repeat; opacity: .9; }
-.carta .num { position: absolute; top: 32px; right: 26px; font: 700 .62rem/1 var(--z-sans); letter-spacing: .25em; text-transform: uppercase; color: var(--z-gold); }
-.carta h3 { margin-top: auto; }
-.carta p { font-size: 15px; line-height: 1.7; color: var(--texto-escuro); margin-top: .8rem; }
+.carta:last-child { margin-bottom: 0; }
+.carta::after { content: ""; position: absolute; inset: -1px; border-radius: inherit; background: var(--z-dark3); opacity: var(--sombra); pointer-events: none; }
+.carta .simbolo { width: 110px; height: 18px; background: url(assets/logo-zivia-crop.png) top center / 100% auto no-repeat; opacity: .9; }
+.carta .num { position: absolute; top: clamp(30px, 3.2vw, 42px); right: clamp(28px, 3vw, 40px); font: italic 400 1.15rem/1 var(--z-serif); color: var(--z-gold-light); }
+.carta h3 { margin-top: auto; font-size: clamp(34px, 3.4vw, 48px); line-height: 1.1; }
+.carta p { font-size: 17px; line-height: 1.7; color: var(--texto-escuro); margin-top: 1rem; max-width: 30em; }
 .carta.fim { border-color: var(--z-gold); }
 
 /* 6. Para quem é */
@@ -265,7 +271,7 @@ footer { padding: 2rem var(--gutter); display: flex; flex-wrap: wrap; justify-co
   .capitulo .lede { margin-top: 1rem; }
   .capitulo .acoes { margin-top: 1.6rem; }
   .carta p { font-size: 16px; }
-  .carta .num { font-size: .75rem; }
+  .carta .num { font-size: 1.05rem; }
   .preco .det { font-size: 16px; }
   .preco .valor small { font-size: .78rem; }
   .garantias { font-size: .85rem; }
@@ -280,9 +286,9 @@ footer { padding: 2rem var(--gutter); display: flex; flex-wrap: wrap; justify-co
   .casa .foto { order: -1; }
   .capitulo, .capitulo.c2, .capitulo.c3 { right: var(--gutter); width: auto; justify-content: flex-end; padding-bottom: 72px; }
   .vinheta { background: linear-gradient(0deg, rgba(26,25,25,.95) 0%, rgba(26,25,25,.6) 45%, transparent 70%); }
-  .trilho { width: auto; flex-direction: column; align-items: center; }
-  .carta { width: min(100%, 360px); height: auto; min-height: 300px; }
-  .cartas { display: block; min-height: 0; }
+  .cartas .miolo { grid-template-columns: 1fr; gap: 40px; }
+  .cartas .intro { position: static; }
+  .carta { top: calc(76px + var(--i) * 10px); height: min(62svh, 440px); margin-bottom: 30vh; }
   .topo .cta-mini { display: none; }
   .rolar { display: none; }
   .oferta { padding: 1.5rem; }
@@ -356,11 +362,6 @@ html.travado, html.travado body { overflow: hidden; }
 /* Títulos revelados palavra a palavra */
 .revela .p { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 .04em .18em; margin: 0 -.04em -.18em; }
 .revela .p > span { display: inline-block; }
-
-/* Carta em foco no trilho */
-.trilho .carta { transition: opacity .6s ease, border-color .6s ease, transform .6s ease; }
-.trilho.foco .carta { opacity: .45; }
-.trilho.foco .carta.no-centro { opacity: 1; border-color: rgba(242,192,99,.6); transform: translateY(-8px); }
 
 @media (hover: none), (pointer: coarse) { .vela { display: none; } }
 @media (prefers-reduced-motion: reduce) {
@@ -490,23 +491,25 @@ html.travado, html.travado body { overflow: hidden; }
 
   <!-- 5. As dez cartas: a jornada, sem revelar a mecânica -->
   <section class="cartas" aria-labelledby="cartas-t">
+   <div class="miolo">
     <div class="intro">
       <span class="zlabel">A jornada</span>
       <h2 id="cartas-t">Está preparado para <em>esse encontro?</em></h2>
       <p>Dez cartas. Dez movimentos. Nenhum deles por acaso. Mostramos a intenção de cada um. O resto, vocês descobrem juntos.</p>
     </div>
-    <div class="trilho">
-      <article class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">1 de 10</span><h3>O começo</h3><p>Vocês saem do automático e voltam ao lugar onde ainda existia curiosidade, escolha e presença.</p></article>
-      <article class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">2 de 10</span><h3>A atenção</h3><p>Vocês começam a perceber detalhes que foram ficando invisíveis ao longo dos anos.</p></article>
-      <article class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">3 de 10</span><h3>O olhar</h3><p>Antes de qualquer resposta, existe um convite para enxergar o outro de novo.</p></article>
-      <article class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">4 de 10</span><h3>A memória</h3><p>Histórias que pareciam guardadas voltam a ocupar espaço entre vocês.</p></article>
-      <article class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">5 de 10</span><h3>O silêncio</h3><p>O mundo diminui o volume para que algo mais íntimo possa aparecer.</p></article>
-      <article class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">6 de 10</span><h3>A verdade</h3><p>Algumas palavras encontram espaço para sair sem pressa, sem defesa e sem rotina.</p></article>
-      <article class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">7 de 10</span><h3>O desejo</h3><p>A intimidade deixa de ser hábito e volta a ser presença, atenção e descoberta.</p></article>
-      <article class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">8 de 10</span><h3>A escolha</h3><p>Vocês lembram que permanecer também pode ser um gesto consciente.</p></article>
-      <article class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">9 de 10</span><h3>O futuro</h3><p>O que ainda pode ser vivido. Não como plano, mas como possibilidade.</p></article>
-      <article class="carta fim"><span class="simbolo" aria-hidden="true"></span><span class="num">10 de 10</span><h3>O reencontro</h3><p>A jornada se fecha no que importa: aquilo que a rotina não conseguiu apagar.</p></article>
+    <div class="pilha">
+      <article style="--i:0" class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">1 de 10</span><h3>O começo</h3><p>Vocês saem do automático e voltam ao lugar onde ainda existia curiosidade, escolha e presença.</p></article>
+      <article style="--i:1" class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">2 de 10</span><h3>A atenção</h3><p>Vocês começam a perceber detalhes que foram ficando invisíveis ao longo dos anos.</p></article>
+      <article style="--i:2" class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">3 de 10</span><h3>O olhar</h3><p>Antes de qualquer resposta, existe um convite para enxergar o outro de novo.</p></article>
+      <article style="--i:3" class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">4 de 10</span><h3>A memória</h3><p>Histórias que pareciam guardadas voltam a ocupar espaço entre vocês.</p></article>
+      <article style="--i:4" class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">5 de 10</span><h3>O silêncio</h3><p>O mundo diminui o volume para que algo mais íntimo possa aparecer.</p></article>
+      <article style="--i:5" class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">6 de 10</span><h3>A verdade</h3><p>Algumas palavras encontram espaço para sair sem pressa, sem defesa e sem rotina.</p></article>
+      <article style="--i:6" class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">7 de 10</span><h3>O desejo</h3><p>A intimidade deixa de ser hábito e volta a ser presença, atenção e descoberta.</p></article>
+      <article style="--i:7" class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">8 de 10</span><h3>A escolha</h3><p>Vocês lembram que permanecer também pode ser um gesto consciente.</p></article>
+      <article style="--i:8" class="carta"><span class="simbolo" aria-hidden="true"></span><span class="num">9 de 10</span><h3>O futuro</h3><p>O que ainda pode ser vivido. Não como plano, mas como possibilidade.</p></article>
+      <article style="--i:9" class="carta fim"><span class="simbolo" aria-hidden="true"></span><span class="num">10 de 10</span><h3>O reencontro</h3><p>A jornada se fecha no que importa: aquilo que a rotina não conseguiu apagar.</p></article>
     </div>
+   </div>
   </section>
 
   <!-- 6. Para quem é, para quem não é -->
@@ -741,32 +744,14 @@ function quebrar(el) {
     if (i < passos.length - 1) rt.to(p, { opacity: 0, y: Y(-30), duration: .06 }, at + .26);
   });
 
-  // 5. Cartas: trilho horizontal no desktop, pilha vertical no celular.
-  const mm = gsap.matchMedia();
-  mm.add('(min-width: 861px)', () => {
-    const trilho = document.querySelector('.trilho');
-    const cartas = [...trilho.querySelectorAll('.carta')];
-    gsap.to(trilho, {
-      x: () => -(trilho.scrollWidth - innerWidth),
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '.cartas', start: 'top top', end: () => '+=' + (trilho.scrollWidth - innerWidth),
-        pin: true, scrub: .6, invalidateOnRefresh: true,
-        onUpdate: () => {
-          const meio = innerWidth / 2;
-          let melhor = null, dist = Infinity;
-          cartas.forEach(c => { const r = c.getBoundingClientRect(); const d = Math.abs(r.left + r.width / 2 - meio); if (d < dist) { dist = d; melhor = c; } });
-          cartas.forEach(c => c.classList.toggle('no-centro', c === melhor));
-        },
-      },
-    });
-    trilho.classList.add('foco');
-    return () => trilho.classList.remove('foco');
-  });
-  mm.add('(max-width: 860px)', () => {
-    ScrollTrigger.batch('.carta', {
-      start: 'top 85%', once: true,
-      onEnter: els => gsap.from(els, { y: Y(40), opacity: 0, duration: .5, stagger: .08, ease: 'power2.out' }),
+  // 5. Cartas em pilha: a carta de baixo recua e escurece enquanto a próxima a cobre.
+  const cartas = gsap.utils.toArray('.carta');
+  cartas.forEach((c, i) => {
+    const prox = cartas[i + 1];
+    if (!prox) return;
+    gsap.to(c, {
+      scale: reduce ? 1 : .92, '--sombra': .55, ease: 'none',
+      scrollTrigger: { trigger: prox, start: 'top bottom', end: () => 'top ' + getComputedStyle(prox).top, scrub: true, invalidateOnRefresh: true },
     });
   });
 
