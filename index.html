@@ -474,7 +474,7 @@ html.travado, html.travado body { overflow: hidden; }
   <!-- 4. Ritual em fragmentos. Vídeo do Higgsfield entra em ritual.mp4 -->
   <section class="ritual" aria-labelledby="ritual-t">
     <div class="quadro">
-      <video class="painel" src="assets/ritual.mp4" poster="assets/ritual.jpg" muted playsinline webkit-playsinline loop autoplay preload="auto" disablepictureinpicture aria-hidden="true"></video>
+      <video class="painel" data-anim="assets/ritual-m.webp" src="assets/ritual.mp4" poster="assets/ritual.jpg" muted playsinline webkit-playsinline loop autoplay preload="auto" disablepictureinpicture aria-hidden="true"></video>
       <div class="passos">
         <h2 id="ritual-t" class="sr-only" style="position:absolute;left:-9999px">Como o ritual acontece</h2>
         <div class="passo">
@@ -588,7 +588,7 @@ html.travado, html.travado body { overflow: hidden; }
 
   <!-- 9. Feel again. Vídeo do Higgsfield entra em final.mp4 -->
   <section class="final" aria-labelledby="final-t">
-    <video class="poster" src="assets/final.mp4" poster="assets/final.jpg" muted playsinline webkit-playsinline loop autoplay preload="metadata" disablepictureinpicture aria-hidden="true"></video>
+    <video class="poster" data-anim="assets/final-m.webp" src="assets/final.mp4" poster="assets/final.jpg" muted playsinline webkit-playsinline loop autoplay preload="metadata" disablepictureinpicture aria-hidden="true"></video>
     <div class="conteudo">
       <h2 id="final-t">Pessoas não se afastam. <em>Elas apenas deixam de se encontrar.</em></h2>
       <a class="btn" href="https://checkout.b4you.com.br/V7e5ldAjeZ/3Steps" rel="noopener">Quero a nossa ZÍVIA</a>
@@ -669,9 +669,9 @@ function abrirLimiar(destino) {
 
 // Vídeos: o iPhone (principalmente em Modo de Pouca Energia) bloqueia autoplay.
 // Liberamos no primeiro toque (o próprio "Entrar") e tocamos só quando o vídeo aparece na tela.
-// Plano B do Modo de Pouca Energia: o iPhone recusa o <video> mesmo depois do toque, mas o motor do Safari
-// (também usado pelo Chrome do iPhone) anima MP4 dentro de <img>, sem botão de play.
-// Se o play for recusado, o vídeo vira essa imagem, com a mesma classe; se não carregar, fica o poster.
+// Plano B do Modo de Pouca Energia: o iPhone recusa o <video> mesmo depois do toque e também congela MP4 em <img>.
+// Imagem animada comum (WebP) continua animando. Se o play for recusado, o vídeo vira o WebP de data-anim
+// (recorte leve para o celular), com a mesma classe; no desktop tenta o MP4 em <img>. Se nada carregar, fica o poster.
 const videos = [...document.querySelectorAll('video')];
 const comoImagem = v => {
   if (v.dataset.trocado) return;
@@ -679,8 +679,9 @@ const comoImagem = v => {
   const img = new Image();
   img.className = v.className;
   img.alt = ''; img.setAttribute('aria-hidden', 'true');
+  const celular = innerWidth <= 900 && v.dataset.anim;
   img.onload = () => { io.unobserve(v); v.replaceWith(img); };
-  img.src = v.currentSrc || v.src;
+  img.src = celular ? v.dataset.anim : (v.currentSrc || v.src);
 };
 const recusado = v => e => { if (e && e.name === 'NotAllowedError') comoImagem(v); };
 const liberar = () => videos.forEach(v => { v.muted = true; const t = v.play(); t?.then(() => { if (!v.dataset.visivel) v.pause(); }).catch(recusado(v)); });
