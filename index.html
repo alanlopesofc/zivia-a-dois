@@ -38,7 +38,10 @@
   --linha-clara: rgba(38,37,38,.14);
   --linha-escura: rgba(255,255,255,.1);
 
-  --z-transition: .3s ease;
+  /* Curvas próprias (nada de `ease` genérico): chegadas desaceleram devagar, como luz de vela. */
+  --z-ease: cubic-bezier(.25, 1, .5, 1);
+  --z-ease-io: cubic-bezier(.65, 0, .35, 1);
+  --z-transition: .3s var(--z-ease);
   --gutter: clamp(20px, 5vw, 48px);
   --container: 1280px;
 }
@@ -94,11 +97,18 @@ p { max-width: 36em; }
   display: inline-block; padding: 1.15rem 2.4rem; border-radius: 2px;
   background: var(--z-gold); color: var(--z-dark); text-decoration: none;
   font: 700 .78rem/1 var(--z-sans); letter-spacing: .22em; text-transform: uppercase;
-  transition: background var(--z-transition), transform var(--z-transition), box-shadow var(--z-transition);
+  transition: background var(--z-transition), color var(--z-transition), border-color var(--z-transition),
+    transform .2s var(--z-ease), box-shadow .5s var(--z-ease);
 }
-.btn:hover { background: var(--z-gold-light); transform: translateY(-1px); box-shadow: 0 18px 40px -16px rgba(191,146,63,.55); }
+/* Hover só com mouse (no toque ele "gruda" depois do clique). Ao pressionar, o botão cede de leve. */
+@media (hover: hover) {
+  .btn:hover { background: var(--z-gold-light); box-shadow: 0 18px 40px -16px rgba(191,146,63,.55); }
+}
+.btn:active { transform: scale(.98); }
 .btn.outline { background: transparent; color: var(--z-light); border: 1px solid rgba(242,192,99,.5); font-weight: 500; }
-.btn.outline:hover { background: var(--z-gold-light); color: var(--z-dark); border-color: var(--z-gold-light); box-shadow: none; }
+@media (hover: hover) {
+  .btn.outline:hover { background: var(--z-gold-light); color: var(--z-dark); border-color: var(--z-gold-light); box-shadow: none; }
+}
 
 /* Ruído de papel do DS */
 .ruido::after {
@@ -150,7 +160,7 @@ p { max-width: 36em; }
 .cenas li {
   font: 400 clamp(26px, 3.2vw, 44px)/1.3 var(--z-serif);
   padding: .55em 0; border-top: 1px solid var(--linha-clara);
-  color: rgba(38,37,38,.32); transition: color .6s ease;
+  color: rgba(38,37,38,.32); transition: color .9s var(--z-ease);
 }
 .cenas li.on { color: var(--z-dark); }
 .citacao {
@@ -319,25 +329,26 @@ html.travado, html.travado body { overflow: hidden; }
 .limiar .brilho {
   position: absolute; left: 50%; top: 50%; width: 70vmin; height: 70vmin; translate: -50% -50%;
   background: radial-gradient(circle, rgba(242,192,99,.14) 0%, rgba(191,146,63,.05) 35%, transparent 65%);
-  animation: chama 4s ease-in-out infinite alternate;
+  /* Único loop da página, de propósito: a chama da antessala. Some ao entrar e não roda com movimento reduzido. */
+  animation: chama 4.6s var(--z-ease-io) infinite alternate;
 }
-@keyframes chama { from { opacity: .7; scale: .96; } to { opacity: 1; scale: 1.04; } }
+@keyframes chama { from { opacity: .78; scale: .98; } to { opacity: 1; scale: 1.02; } }
 .limiar .dentro { position: relative; z-index: 2; display: grid; justify-items: center; gap: 1.6rem; padding: 0 var(--gutter); max-width: 36rem; }
 .limiar .simb { width: 120px; height: 19px; background: url(assets/logo-zivia-crop.png) top center / 100% auto no-repeat; opacity: .9; }
 .limiar .frase { font: italic 400 clamp(28px, 3.4vw, 44px)/1.3 var(--z-serif); color: var(--z-light); max-width: 16em; }
 .limiar .frase em { color: var(--z-gold-light); }
 .limiar .apoio { font: 300 .95rem/1.7 var(--z-sans); color: rgba(255,255,255,.62); }
 .limiar .carga { width: 120px; height: 1px; background: rgba(255,255,255,.12); overflow: hidden; }
-.limiar .carga i { display: block; height: 100%; width: 0; background: var(--z-gold); transition: width .3s ease; }
-.limiar .btn { opacity: .35; pointer-events: none; transition: opacity .6s ease, background var(--z-transition); }
+.limiar .carga i { display: block; height: 100%; background: var(--z-gold); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--z-ease); }
+.limiar .btn { opacity: .35; pointer-events: none; transition: opacity .8s var(--z-ease), background var(--z-transition); }
 .limiar.pronto .btn { opacity: 1; pointer-events: auto; }
-.limiar .pular { font: 500 .6rem/1 var(--z-sans); letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.4); background: none; border: 0; cursor: pointer; padding: .6rem; }
+.limiar .pular { font: 500 .6rem/1 var(--z-sans); letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.4); background: none; border: 0; cursor: pointer; padding: .6rem; transition: color var(--z-transition); }
 .limiar .pular:hover { color: var(--z-gold-light); }
 
 /* Luz de vela que acompanha o cursor */
 .vela {
   position: fixed; left: 0; top: 0; width: 560px; height: 560px; margin: -280px 0 0 -280px; z-index: 15;
-  pointer-events: none; border-radius: 50%; opacity: 0; transition: opacity .8s ease;
+  pointer-events: none; border-radius: 50%; opacity: 0; transition: opacity 1.2s var(--z-ease);
   background: radial-gradient(circle, rgba(242,178,99,.13) 0%, rgba(191,146,63,.05) 40%, transparent 70%);
   mix-blend-mode: screen; will-change: transform;
 }
@@ -356,7 +367,7 @@ html.travado, html.travado body { overflow: hidden; }
 
 /* Espelho agora é escuro: estamos dentro da caixa */
 .espelho.escuro { background: var(--z-dark2); color: var(--z-light); }
-.espelho.escuro .cenas li { color: rgba(255,255,255,.16); border-top-color: var(--linha-escura); transition: color .9s ease, text-shadow .9s ease; }
+.espelho.escuro .cenas li { color: rgba(255,255,255,.16); border-top-color: var(--linha-escura); transition: color 1.1s var(--z-ease), text-shadow 1.1s var(--z-ease); }
 .espelho.escuro .cenas li.on { color: var(--z-light); text-shadow: 0 0 40px rgba(242,192,99,.25); }
 .espelho.escuro .citacao { background: rgba(191,146,63,.07); }
 .espelho.escuro .citacao .serif { color: var(--z-gold-light); }
@@ -374,6 +385,8 @@ html.travado, html.travado body { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .limiar .brilho { animation: none; }
   .vela { display: none; }
+  .btn:active { transform: none; }
+  .limiar .carga i { transition: none; }
 }
 </style>
 </head>
@@ -635,7 +648,7 @@ try {
   const { mountSequence } = await import('./seq.js');
   box = mountSequence(document.getElementById('caixa'), {
     desk: 'assets/seq/d', mob: 'assets/seq/m', frames: 171,
-    onLoad: f => { carga.style.width = Math.round(f * 100) + '%'; if (f > .25) limiar.classList.add('pronto'); },
+    onLoad: f => { carga.style.transform = `scaleX(${f})`; if (f > .25) limiar.classList.add('pronto'); },
   });
 } catch (e) {
   document.documentElement.classList.add('no-webgl');
@@ -649,14 +662,17 @@ function abrirLimiar(destino) {
     if (destino) document.querySelector(destino)?.scrollIntoView();
     ScrollTrigger.refresh();
   };
-  if (reduce) { gsap.to(limiar, { opacity: 0, duration: .4, onComplete: fim }); return; }
+  if (reduce) { gsap.to(limiar, { opacity: 0, duration: .6, ease: 'power1.out', onComplete: fim }); return; }
   gsap.timeline({ onComplete: fim })
-    .to('.limiar .dentro', { opacity: 0, y: -12, duration: .7, ease: 'power2.in' })
-    .to('.limiar .brilho', { opacity: 0, duration: .6 }, '<')
-    .to('.limiar .meia.cima', { yPercent: -100, duration: 1.6, ease: 'power3.inOut' }, '-=.1')
-    .to('.limiar .meia.baixo', { yPercent: 100, duration: 1.6, ease: 'power3.inOut' }, '<')
-    .fromTo('#caixa', { scale: 1.14 }, { scale: 1, duration: 2.4, ease: 'power2.out' }, '<')
-    .from('.c1 > *', { opacity: 0, y: 24, duration: 1, stagger: .12, ease: 'power2.out' }, '-=1.3');
+    // A frase sai perdendo foco; a tampa se abre devagar; a caixa assenta sem tranco.
+    // O fundo da antessala sai na hora: só as duas metades cobrem a tela, e a caixa aparece entre elas.
+    .set(limiar, { background: 'transparent' })
+    .to('.limiar .dentro', { opacity: 0, y: -8, filter: 'blur(4px)', duration: .7, ease: 'power2.in' })
+    .to('.limiar .brilho', { opacity: 0, duration: .8, ease: 'power1.out' }, '<')
+    .to('.limiar .meia.cima', { yPercent: -100, duration: 1.8, ease: 'expo.inOut' }, '-=.15')
+    .to('.limiar .meia.baixo', { yPercent: 100, duration: 1.8, ease: 'expo.inOut' }, '<')
+    .fromTo('#caixa', { scale: 1.08 }, { scale: 1, duration: 2.6, ease: 'expo.out' }, '<.3')
+    .from('.c1 > *', { opacity: 0, y: 16, filter: 'blur(6px)', duration: 1.2, stagger: .14, ease: 'expo.out', clearProps: 'filter' }, '-=1.6');
 }
 {
   document.documentElement.classList.add('travado');
@@ -703,8 +719,12 @@ if (vela && !reduce && matchMedia('(pointer: fine)').matches) {
     const el = document.elementFromPoint(tx, ty);
     vela.classList.toggle('acesa', !!el && !el.closest('.claro, .limiar'));
   }, { passive: true });
-  gsap.ticker.add(() => {
-    x += (tx - x) * .08; y += (ty - y) * .08;
+  // Atraso igual em 60 e 120 Hz; parada, a vela não reescreve o estilo a cada quadro.
+  gsap.ticker.add((t, dt) => {
+    const k = 1 - Math.pow(1 - .08, Math.min(dt, 50) / (1000 / 60));
+    const dx = tx - x, dy = ty - y;
+    if (Math.abs(dx) + Math.abs(dy) < .3) return;
+    x += dx * k; y += dy * k;
     vela.style.transform = `translate3d(${x}px, ${y}px, 0)`;
   });
 }
@@ -735,19 +755,21 @@ function quebrar(el) {
       onUpdate: self => box?.setProgress(self.progress),
     },
   });
-  tl.to('.c1', { opacity: 0, y: Y(-40), duration: .14 }, .06)
-    .fromTo('.c2', { opacity: 0, y: Y(40) }, { opacity: 1, y: 0, duration: .1 }, .22)
-    .to('.c2', { opacity: 0, y: Y(-40), duration: .1 }, .44)
-    .fromTo('.c3', { opacity: 0, y: Y(40) }, { opacity: 1, y: 0, duration: .1 }, .58)
-    .to('.c3', { opacity: 0, duration: .08 }, .8)
+  // Capítulos: entram nítidos subindo pouco; saem mais discretos, desfocando (perdem relevância).
+  const B = v => reduce ? 'blur(0px)' : `blur(${v}px)`;
+  tl.fromTo('.c1', { filter: B(0) }, { opacity: 0, y: Y(-16), filter: B(4), duration: .14, ease: 'power1.in', immediateRender: false }, .06)
+    .fromTo('.c2', { opacity: 0, y: Y(24), filter: B(6) }, { opacity: 1, y: 0, filter: B(0), duration: .1, ease: 'power2.out' }, .22)
+    .to('.c2', { opacity: 0, y: Y(-12), filter: B(4), duration: .1, ease: 'power1.in' }, .44)
+    .fromTo('.c3', { opacity: 0, y: Y(24), filter: B(6) }, { opacity: 1, y: 0, filter: B(0), duration: .1, ease: 'power2.out' }, .58)
+    .to('.c3', { opacity: 0, filter: B(4), duration: .08, ease: 'power1.in' }, .8)
     .fromTo('.iris', { opacity: 1, '--r': '140%' }, { '--r': '-30%', duration: .12, ease: 'power1.in' }, .82)
-    .fromTo('.sussurro', { opacity: 0, y: Y(20) }, { opacity: 1, y: 0, duration: .05 }, .92);
+    .fromTo('.sussurro', { opacity: 0, y: Y(12) }, { opacity: 1, y: 0, duration: .06, ease: 'power2.out' }, .92);
 
   // Títulos das seções entram palavra a palavra, uma vez.
   if (!reduce) document.querySelectorAll('main section:not(.abertura) h2').forEach(h => {
     h.classList.add('revela'); quebrar(h);
     gsap.from(h.querySelectorAll('.p > span'), {
-      yPercent: 110, duration: 1.1, stagger: .045, ease: 'power3.out',
+      yPercent: 110, duration: 1.3, stagger: .05, ease: 'expo.out',
       scrollTrigger: { trigger: h, start: 'top 82%', once: true },
     });
   });
@@ -772,8 +794,8 @@ function quebrar(el) {
   if (!reduce) rt.fromTo('.ritual .painel', { scale: .94 }, { scale: 1, duration: 1 }, 0);
   passos.forEach((p, i) => {
     const at = i * .33;
-    rt.fromTo(p, { opacity: 0, y: Y(30) }, { opacity: 1, y: 0, duration: .08 }, at + .02);
-    if (i < passos.length - 1) rt.to(p, { opacity: 0, y: Y(-30), duration: .06 }, at + .26);
+    rt.fromTo(p, { opacity: 0, y: Y(20) }, { opacity: 1, y: 0, duration: .08, ease: 'power2.out' }, at + .02);
+    if (i < passos.length - 1) rt.to(p, { opacity: 0, y: Y(-10), duration: .06, ease: 'power1.in' }, at + .26);
   });
 
   // 5. Cartas em pilha: a carta de baixo recua e escurece enquanto a próxima a cobre.
@@ -789,7 +811,7 @@ function quebrar(el) {
 
   // 7. A caixa fechada sobe de leve ao chegar.
   if (!reduce) gsap.from('.casa .foto img', {
-    y: 60, rotate: -2, duration: 1, ease: 'power2.out',
+    y: 32, duration: 1.6, ease: 'expo.out',
     scrollTrigger: { trigger: '.casa', start: 'top 70%' },
   });
 }
