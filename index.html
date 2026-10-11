@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex">
 <title>ZIVIA | Experiências guiadas para casais</title>
 <meta name="description" content="Conheça a edição para casais da ZIVIA: uma caixa com dez experiências guiadas para reservar um tempo a dois e abrir espaço para novas descobertas.">
-<meta name="theme-color" content="#F8F4EE">
+<meta name="theme-color" content="#0d0c0c">
 <script>
   // A página sempre abre no topo: sem restaurar a rolagem anterior e sem pular para âncora antiga.
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -91,27 +91,40 @@ p { text-wrap: pretty; }
 .topo { position: fixed; inset: 0 0 auto; z-index: 50; transition: background-color .4s var(--ease), box-shadow .4s var(--ease); }
 .topo .miolo { display: flex; align-items: center; justify-content: space-between; gap: 2rem; height: 76px; }
 .topo.cheio { background: rgba(248, 244, 238, .92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 1px 0 var(--zivia-border); }
-.marca { display: block; padding: 6px 0; }
-.marca img { width: 88px; height: auto; }
+.marca { display: block; position: relative; padding: 6px 0; }
+.marca img { width: 88px; height: auto; transition: opacity .3s var(--ease); }
+.marca .escura { position: absolute; left: 0; top: 6px; opacity: 0; }
+.topo:not(.cheio) nav a:not(.btn) { color: var(--claro-2); }
+.topo:not(.cheio) .btn { background: var(--zivia-paper); color: var(--zivia-charcoal); border-color: var(--zivia-paper); }
+.topo.cheio .marca .clara { opacity: 0; }
+.topo.cheio .marca .escura { opacity: 1; }
 .topo nav { display: flex; align-items: center; gap: clamp(1.2rem, 2.4vw, 2.2rem); }
 .topo nav a:not(.btn) { font: 500 14px/1 var(--sans); text-decoration: none; color: var(--texto-2); transition: color .2s var(--ease); }
 .topo nav a:not(.btn):hover { color: var(--texto); }
 .topo .btn { min-height: 44px; padding: .6rem 1.2rem; font-size: 14px; }
 
-/* 1. Hero: texto e a caixa, que se abre com a rolagem */
-.abertura { position: relative; height: 220vh; }
-.abertura .palco { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; align-items: center; padding-top: 72px; }
-.abertura .grade { display: grid; grid-template-columns: 1fr 1.08fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
-.abertura .intro { margin-top: 1.4rem; }
-.abertura .acoes { margin-top: 2rem; }
-.abertura .apoio { margin-top: 1.6rem; }
-.caixa {
-  position: relative; aspect-ratio: 4 / 5; max-height: calc(100svh - 132px); width: 100%; justify-self: end;
-  border-radius: var(--raio-superficie); overflow: hidden; background: #0d0c0c;
-}
+/* 1. Hero: a caixa em tela cheia, abrindo com a rolagem. Texto compacto no canto, sobre o carvão. */
+.abertura { position: relative; height: 220vh; background: #0d0c0c; color: var(--claro); }
+.abertura .palco { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.caixa { position: absolute; inset: 0; background: #0d0c0c; }
 .caixa canvas { width: 100%; height: 100%; }
-.caixa .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .4s var(--ease); }
-.caixa .rotulo { position: absolute; left: 16px; bottom: 14px; z-index: 2; font: 500 12px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: rgba(248,244,238,.7); }
+.caixa .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 64% 50%; transition: opacity .4s var(--ease); }
+.abertura .vinheta {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(120% 85% at 0% 100%, rgba(13,12,12,.88) 0%, rgba(13,12,12,.5) 38%, transparent 62%),
+    linear-gradient(0deg, rgba(13,12,12,.55) 0%, transparent 26%),
+    linear-gradient(180deg, rgba(13,12,12,.45) 0%, transparent 18%);
+}
+.abertura .texto { position: absolute; z-index: 2; left: 0; right: 0; bottom: clamp(44px, 9vh, 96px); }
+.abertura .eyebrow { color: #C9AE8C; }
+.abertura h1 { font-size: clamp(38px, 4.1vw, 66px); line-height: 1.06; max-width: 9.6em; }
+.abertura .intro { margin-top: 1.2rem; max-width: 30em; color: var(--claro-2); font-size: clamp(17px, 1.25vw, 20px); }
+.abertura .acoes { margin-top: 1.8rem; }
+.abertura .btn { background: var(--zivia-paper); color: var(--zivia-charcoal); border-color: var(--zivia-paper); }
+.abertura .link { color: var(--claro); }
+.abertura .apoio { margin-top: 1.2rem; color: rgba(248,244,238,.6); }
+@media (hover: hover) { .abertura .btn:hover { background: var(--zivia-ivory); border-color: var(--zivia-ivory); } }
 
 /* Seções */
 section { position: relative; }
@@ -215,17 +228,21 @@ footer img { width: 96px; height: auto; }
   .oferta .cartao .midia { aspect-ratio: 4 / 3; }
 }
 @media (max-width: 899px) {
-  /* Celular: sem cena presa. Título, explicação e CTA primeiro; a caixa abre enquanto passa pela tela. */
-  .abertura { height: auto; }
-  .abertura .palco { position: static; height: auto; padding: 104px 0 48px; }
-  .abertura .grade { grid-template-columns: 1fr; gap: 36px; }
-  .caixa { aspect-ratio: 1 / 1; max-height: none; justify-self: stretch; }
+  /* Celular: tela cheia também. A caixa (quadro quadrado) fica no alto; o texto e o CTA embaixo, sobre o carvão. */
+  .abertura { height: 180vh; }
+  .caixa { bottom: auto; height: min(50%, 104vw); -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent 100%); mask-image: linear-gradient(180deg, #000 70%, transparent 100%); }
+  .caixa .poster { object-position: 50% 50%; }
+  .abertura .vinheta { background: linear-gradient(180deg, rgba(13,12,12,.5) 0%, transparent 14%); }
+  .abertura .texto { bottom: 32px; }
+  .abertura h1 { font-size: clamp(32px, 8.6vw, 42px); }
+  .abertura .intro { font-size: 16.5px; margin-top: .9rem; }
+  .abertura .acoes { margin-top: 1.3rem; }
+  .abertura .apoio { display: none; }
   .topo .miolo { height: 64px; }
   .marca img { width: 76px; }
 }
 @media (max-width: 767px) {
   body { font-size: 16px; }
-  h1 { font-size: clamp(40px, 11vw, 52px); }
   .experiencia .par { grid-template-columns: 1.2fr .8fr; gap: 10px; }
   .ritual .galeria { grid-template-columns: 1fr 1fr; }
   .ritual .galeria .alta { grid-column: span 2; grid-row: auto; aspect-ratio: 4 / 5; }
@@ -244,7 +261,10 @@ footer img { width: 96px; height: auto; }
 <body>
 <header class="topo">
   <div class="miolo">
-    <a class="marca" href="#topo" aria-label="ZIVIA, voltar ao início"><img src="assets/logo-zivia-v3.png" alt="ZIVIA" width="640" height="390"></a>
+    <a class="marca" href="#topo" aria-label="ZIVIA, voltar ao início">
+      <img class="clara" src="assets/logo-zivia-v3-claro.png" alt="ZIVIA" width="640" height="390">
+      <img class="escura" src="assets/logo-zivia-v3.png" alt="" aria-hidden="true" width="640" height="390">
+    </a>
     <nav aria-label="Principal">
       <a href="#experiencia">A experiência</a>
       <a href="#como">Como funciona</a>
@@ -260,8 +280,13 @@ footer img { width: 96px; height: auto; }
   <!-- 1. Hero: o que é e por que interessa. A caixa é a protagonista e abre com a rolagem. -->
   <section class="abertura" aria-labelledby="hero-t">
     <div class="palco">
-      <div class="miolo grade">
-        <div class="texto">
+      <div class="caixa" role="img" aria-label="A caixa da edição para casais, preta fosca com o logotipo ZIVIA dourado, abrindo devagar">
+        <img class="poster" src="assets/seq/d/001.jpg" alt="" aria-hidden="true">
+        <canvas id="caixa" aria-hidden="true"></canvas>
+      </div>
+      <div class="vinheta"></div>
+      <div class="texto">
+        <div class="miolo">
           <span class="eyebrow h-in">ZIVIA · Edição para casais</span>
           <h1 id="hero-t" class="h-in">Ainda há muito para vocês <em>viverem juntos.</em></h1>
           <p class="intro h-in">Uma caixa com dez experiências guiadas para reservar um tempo a dois, abrir novas conversas e descobrir outras formas de estar juntos.</p>
@@ -270,11 +295,6 @@ footer img { width: 96px; height: auto; }
             <a class="link" href="#como">Entender como funciona</a>
           </div>
           <p class="apoio h-in">Primeira edição · 100 unidades comerciais nesta configuração.</p>
-        </div>
-        <div class="caixa h-in" role="img" aria-label="A caixa da edição para casais, preta fosca com o logotipo ZIVIA dourado, abrindo devagar">
-          <img class="poster" src="assets/seq/d/001.jpg" alt="" aria-hidden="true">
-          <canvas id="caixa" aria-hidden="true"></canvas>
-          <span class="rotulo" aria-hidden="true">Edição para casais</span>
         </div>
       </div>
     </div>
@@ -452,7 +472,8 @@ addEventListener('pageshow', e => { if (e.persisted) scrollTo(0, 0); });
 // Cabeçalho ganha fundo de papel ao sair do topo.
 const topo = document.querySelector('.topo');
 // (toggleClass com end:'max' tirava a classe no fim exato da página e o logo sumia sobre o carvão.)
-const pintaTopo = () => topo.classList.toggle('cheio', scrollY > 24);
+const abertura = document.querySelector('.abertura');
+const pintaTopo = () => topo.classList.toggle('cheio', scrollY > abertura.offsetHeight - innerHeight * 1.05);
 addEventListener('scroll', pintaTopo, { passive: true }); pintaTopo();
 
 // ---------- A caixa abrindo, quadro a quadro ----------
@@ -491,8 +512,12 @@ function desenhar(forcar) {
   if (!im || !canvas.width) return;
   desenhado = i;
   const W = canvas.width, H = canvas.height;
-  const s = Math.max(W / im.width, H / im.height);
-  ctx.drawImage(im, (W - im.width * s) / 2, (H - im.height * s) / 2, im.width * s, im.height * s);
+  // Telas largas: a caixa desloca para a direita, deixando o canto do texto livre. A escala cobre também
+  // o deslocamento, para não sobrar faixa sem imagem na borda esquerda.
+  const desloca = W / H > 1.2 ? W * .14 : 0;
+  const s = Math.max((W + desloca * 2) / im.width, H / im.height);
+  ctx.fillStyle = '#0d0c0c'; ctx.fillRect(0, 0, W, H);
+  ctx.drawImage(im, (W - im.width * s) / 2 + desloca, (H - im.height * s) / 2, im.width * s, im.height * s);
   poster.style.opacity = 0;
 }
 function medir() {
@@ -504,16 +529,10 @@ function medir() {
 }
 carregar();
 new ResizeObserver(medir).observe(canvas);
-// Desktop: a cena fica presa enquanto a caixa abre. Celular: abre enquanto passa pela tela.
-ScrollTrigger.matchMedia({
-  '(min-width: 900px)': () => { ScrollTrigger.create({
-    trigger: '.abertura', start: 'top top', end: 'bottom bottom', scrub: .5,
-    onUpdate: s => { progresso = s.progress; desenhar(); },
-  }); },
-  '(max-width: 899px)': () => { ScrollTrigger.create({
-    trigger: '.caixa', start: 'top 85%', end: 'bottom 15%', scrub: .5,
-    onUpdate: s => { progresso = s.progress; desenhar(); },
-  }); },
+// A cena fica presa enquanto a caixa abre (o texto e o CTA continuam na tela o tempo todo).
+ScrollTrigger.create({
+  trigger: '.abertura', start: 'top top', end: 'bottom bottom', scrub: .5,
+  onUpdate: s => { progresso = s.progress; desenhar(); },
 });
 
 // ---------- Vídeos ----------
